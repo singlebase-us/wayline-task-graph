@@ -1,0 +1,45 @@
+{
+  "name": "@wayline/task-graph",
+  "version": "0.1.0",
+  "description": "Deterministic tech-tree layout and routed edges for Wayline task graphs on React Flow.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.30.3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/singlebase-us/wayline-task-graph.git"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.ts"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "check": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "dependencies": {
+    "elkjs": "^0.12.0"
+  },
+  "peerDependencies": {
+    "@xyflow/react": "^12.12.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@xyflow/react": "^12.12.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "6.0.3",
+    "vitest": "^4.1.12"
+  }
+}
