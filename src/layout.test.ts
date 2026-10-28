@@ -3,35 +3,8 @@ import {
   computeTaskGraphLayout,
   layoutNodeOrder,
   roundedOrthogonalPath,
-  type TaskGraphLayoutEdge,
-  type TaskGraphLayoutNode,
 } from "./layout.js";
-
-/** 27 节点的交付计划样例：多条并行分支、跨多列的长依赖，最终汇入交付目标。 */
-const deliveryPlan: Array<[string, string[]]> = [
-  ["A1", []], ["A2", []], ["A3", []],
-  ["B1", ["A1", "A2"]], ["B2", ["B1"]], ["B3", ["A1", "A3"]], ["B4", ["B3"]], ["B5", ["A3"]],
-  ["C1", ["B3"]], ["C2", ["C1", "B5"]], ["C3", ["C1", "B4"]], ["C4", ["C3", "B5"]], ["C5", ["C2"]], ["C6", ["C2", "C3"]],
-  ["D1", ["B2"]], ["D2", ["D1", "C2"]], ["D3", ["D1", "C3", "B4", "A2"]], ["D4", ["D3", "C4"]], ["D5", ["D1", "C6"]],
-  ["E1", ["A3"]], ["E2", ["E1", "C1"]], ["E3", ["E2"]],
-  ["F1", ["D2", "D4", "E2"]], ["F2", ["C4", "E2"]], ["F3", ["C2", "C4"]],
-  ["G1", ["F1", "F2", "F3", "E3", "D5", "C5"]],
-];
-
-const ref = (key: string) => `n_${key}0000`;
-
-function graphOf(plan: Array<[string, string[]]>, summaryFrom: string[]): { nodes: TaskGraphLayoutNode[]; edges: TaskGraphLayoutEdge[] } {
-  return {
-    nodes: [
-      ...plan.map(([key]) => ({ ref: ref(key), type: "task" as const, width: 250, height: 146 })),
-      { ref: ref("ZZ"), type: "summary" as const, width: 250, height: 116 },
-    ],
-    edges: [
-      ...plan.flatMap(([key, deps]) => deps.map((dep) => ({ source: ref(dep), target: ref(key) }))),
-      ...summaryFrom.map((key) => ({ source: ref(key), target: ref("ZZ") })),
-    ].map((edge, index) => ({ ...edge, ref: `e_${String(index).padStart(6, "0")}` })),
-  };
-}
+import { deliveryPlan, graphOf, ref } from "./plans.fixture.js";
 
 describe("computeTaskGraphLayout", () => {
   it("routes every dependency around the other tasks and keeps the final objective in the last column", async () => {

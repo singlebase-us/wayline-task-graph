@@ -10,4 +10,15 @@ export {
   type TaskGraphLayoutEdge,
   type TaskGraphLayoutNode,
 } from "./layout.js";
+export {
+  adaptEdgeRoute,
+  crossesAny,
+  followRoute,
+  overlapsAny,
+  routeAroundObstacles,
+  type Rect,
+  type RoutingEdge,
+  type RoutingHints,
+  type RoutingScene,
+} from "./reroute.js";
 export { TaskGraphRoutedEdge, type RoutedEdgeData } from "./routed-edge.js";

@@ -61,7 +61,18 @@ Give React Flow nodes the same `width` and `height` you passed to the layout, so
 cards where the routes expect them.
 
 `TaskGraphRoutedEdge` draws the computed route while both endpoints stay where the layout put them.
-Once a user drags an endpoint, it falls back to a smoothstep path until you lay the graph out again.
+When a user drags a node, its edges follow the same rules as the layout so the picture stays stable:
+
+- An edge keeps its route and only moves the segment at the dragged end. Its channel, and any
+  bundle ELK merged it into, stay where they were. When the node comes within a few pixels of the
+  channel, it pushes the channel along instead of letting the segment collapse.
+- If the moved route would run through a node or lie on top of another edge, the edge is routed
+  around every node with the layout's edge-node spacing. It joins the bundles of edges that share
+  its source or target, avoids lying on other edges, prefers fewer bends and crossings, and stays
+  close to where it was drawn in the previous frame, so it does not flicker between two paths.
+- Only edges attached to a moving node are rerouted; every other edge stays exactly where it is.
+- Edges without a route, such as ones added after layout, are routed the same way.
+- When nodes overlap so that no path exists, the edge falls back to a smoothstep path.
 
 ## API
 
@@ -72,6 +83,11 @@ Once a user drags an endpoint, it falls back to a smoothstep path until you lay 
 | `layoutNodeOrder(nodes, edges)` | The deterministic topological order fed to ELK; nodes on a cycle come last. |
 | `roundedOrthogonalPath(points, radius?)` | SVG path for an orthogonal polyline with rounded bends. |
 | `taskGraphLayoutOptions` | The ELK layered options in use. |
+| `adaptEdgeRoute(edge, scene, ports?)` | The polyline an edge should draw for the current node positions, following the rules above; `null` if blocked. |
+| `followRoute(route, source, target, obstacles, options?)` | Adapts a route to moved endpoints by shifting its end segments; `null` if it would cross a node or another edge. |
+| `routeAroundObstacles(start, end, obstacles, hints?)` | Orthogonal route leaving right and entering left, around all obstacles, guided by sibling, other and previous paths; `null` if blocked. |
+| `crossesAny(points, obstacles)` | Whether a polyline runs through any rectangle. |
+| `overlapsAny(points, lines, minLength?)` | Whether a polyline lies on top of any of the given lines. |
 
 ## Develop
 

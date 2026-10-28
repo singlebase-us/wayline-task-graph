@@ -1,6 +1,6 @@
 {
   "name": "@wayline/task-graph",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Deterministic tech-tree layout and routed edges for Wayline task graphs on React Flow.",
   "license": "MIT",
   "type": "module",
@@ -19,7 +19,8 @@
   "files": [
     "dist",
     "src",
-    "!src/**/*.test.ts"
+    "!src/**/*.test.ts",
+    "!src/**/*.fixture.ts"
   ],
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
